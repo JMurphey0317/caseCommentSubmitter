@@ -1,0 +1,592 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Case Comment Submitter — Spectro Cloud Brand
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:host {
+    --teal:         #1F7A78;
+    --teal-dark:    #043736;
+    --teal-light:   #e8f4f3;
+    --teal-mid:     #c2dfde;
+    --orange:       #B94B01;
+    --bg-paper:     #F7F1ED;
+    --bg-white:     #FFFFFF;
+    --grey-200:     #E0DCD7;
+    --grey-300:     #BEB9B6;
+    --grey-muted:   #9E9C9C;
+    --ink:          #012121;
+    --ink-light:    #1E3332;
+    --forest:       #1E3332;
+    --gold:         #F0BE65;
+    --radius-sm:    6px;
+    --radius-md:    12px;
+    --radius-lg:    18px;
+    --radius-full:  999px;
+    --shadow-card:  0 2px 12px rgba(4,55,54,.10), 0 1px 3px rgba(4,55,54,.06);
+    --shadow-focus: 0 0 0 3px rgba(31,122,120,.28);
+    --t-fast:       160ms cubic-bezier(.4,0,.2,1);
+    --t-std:        260ms cubic-bezier(.4,0,.2,1);
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+    display: block;
+}
+
+/* ── Root ────────────────────────────────────────────────────────────────── */
+.scc-root {
+    background   : var(--bg-white);
+    border-radius: var(--radius-lg);
+    box-shadow   : var(--shadow-card);
+    border       : 1.5px solid var(--grey-200);
+    overflow     : hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.scc-header {
+    position : relative;
+    background: var(--teal-dark);
+    overflow  : hidden;
+}
+
+.scc-header__accent {
+    position : absolute;
+    inset    : 0;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 60%);
+    opacity  : .85;
+}
+
+.scc-header__accent::after {
+    content      : '';
+    position     : absolute;
+    top          : -60px;
+    right        : -40px;
+    width        : 200px;
+    height       : 200px;
+    background   : rgba(255,255,255,.06);
+    border-radius: 50%;
+}
+
+.scc-header__inner {
+    position : relative;
+    display  : flex;
+    align-items: center;
+    gap      : 14px;
+    padding  : 20px 24px;
+}
+
+.scc-header__icon {
+    flex-shrink : 0;
+    width       : 40px;
+    height      : 40px;
+    background  : rgba(255,255,255,.15);
+    border-radius: var(--radius-md);
+    display     : flex;
+    align-items : center;
+    justify-content: center;
+}
+
+.scc-header__icon svg { width: 20px; height: 20px; color: #fff; }
+
+.scc-header__text { flex: 1; min-width: 0; }
+
+.scc-header__case-num {
+    font-size    : 11px;
+    font-weight  : 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color        : var(--teal-mid);
+    display      : block;
+    margin-bottom: 2px;
+}
+
+.scc-header__title {
+    margin       : 0;
+    font-size    : 16px;
+    font-weight  : 700;
+    color        : #fff;
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Status Badge ────────────────────────────────────────────────────────── */
+.scc-status {
+    flex-shrink  : 0;
+    display      : inline-flex;
+    align-items  : center;
+    gap          : 6px;
+    font-size    : 11px;
+    font-weight  : 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding      : 4px 10px;
+    border-radius: var(--radius-full);
+    border       : 1.5px solid rgba(255,255,255,.25);
+    color        : #fff;
+}
+
+.scc-status__dot {
+    width        : 6px;
+    height       : 6px;
+    border-radius: 50%;
+    background   : currentColor;
+}
+
+.scc-status--open     { background: rgba(31,122,120,.45); }
+.scc-status--progress { background: rgba(240,190,101,.35); color: #fde08a; }
+.scc-status--closed   { background: rgba(255,255,255,.15); }
+.scc-status--default  { background: rgba(255,255,255,.10); }
+
+/* ── Loading ─────────────────────────────────────────────────────────────── */
+.scc-loading {
+    display      : flex;
+    flex-direction: column;
+    align-items  : center;
+    justify-content: center;
+    gap          : 14px;
+    padding      : 48px;
+    color        : var(--grey-muted);
+    font-size    : 14px;
+}
+
+.scc-spinner {
+    width        : 32px;
+    height       : 32px;
+    border       : 3px solid var(--teal-light);
+    border-top-color: var(--teal);
+    border-radius: 50%;
+    animation    : scc-spin 700ms linear infinite;
+}
+
+@keyframes scc-spin { to { transform: rotate(360deg); } }
+
+/* ── Error ───────────────────────────────────────────────────────────────── */
+.scc-error {
+    display      : flex;
+    align-items  : center;
+    gap          : 10px;
+    margin       : 12px 16px;
+    padding      : 12px 14px;
+    background   : rgba(185,75,1,.08);
+    border       : 1.5px solid rgba(185,75,1,.25);
+    border-radius: var(--radius-md);
+    color        : #851A01;
+    font-size    : 13px;
+    font-weight  : 500;
+}
+
+.scc-error svg { flex-shrink: 0; width: 18px; height: 18px; }
+
+.scc-error__dismiss {
+    margin-left: auto;
+    background : none;
+    border     : none;
+    cursor     : pointer;
+    color      : var(--orange);
+    font-size  : 14px;
+    padding    : 2px 4px;
+    opacity    : .7;
+}
+
+.scc-error__dismiss:hover { opacity: 1; }
+
+/* ── Compose ─────────────────────────────────────────────────────────────── */
+.scc-compose {
+    padding      : 20px 24px 16px;
+    border-bottom: 1.5px solid var(--grey-200);
+    background   : var(--bg-white);
+}
+
+.scc-compose__label {
+    margin       : 0 0 2px;
+    font-size    : 15px;
+    font-weight  : 700;
+    color        : var(--ink);
+}
+
+.scc-compose__sublabel {
+    margin       : 0 0 12px;
+    font-size    : 12px;
+    color        : var(--grey-muted);
+}
+
+.scc-compose__textarea {
+    width        : 100%;
+    min-height   : 100px;
+    max-height   : 200px;
+    padding      : 12px 14px;
+    background   : var(--bg-white);
+    border       : 1.5px solid var(--grey-300);
+    border-radius: var(--radius-md);
+    outline      : none;
+    resize       : vertical;
+    font-family  : inherit;
+    font-size    : 14px;
+    line-height  : 1.55;
+    color        : var(--ink);
+    box-sizing   : border-box;
+    transition   : border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.scc-compose__textarea::placeholder { color: var(--grey-muted); }
+.scc-compose__textarea:focus {
+    border-color : var(--teal);
+    box-shadow   : var(--shadow-focus);
+}
+
+.scc-compose__textarea:disabled { opacity: .55; cursor: not-allowed; }
+
+.scc-compose__char-row {
+    text-align   : right;
+    margin       : 4px 0 0;
+    min-height   : 18px;
+}
+
+/* Attachments section */
+.scc-compose__attach-section {
+    margin-top   : 14px;
+    padding-top  : 14px;
+    border-top   : 1px solid var(--grey-200);
+}
+
+.scc-compose__upload-hint {
+    margin       : 6px 0 0;
+    font-size    : 11px;
+    color        : var(--grey-muted);
+    text-align   : right;
+}
+
+/* Pending file pills */
+.scc-pending-files {
+    display      : flex;
+    flex-wrap    : wrap;
+    gap          : 6px;
+    margin-top   : 10px;
+}
+
+.scc-pending-file__pill {
+    display      : inline-flex;
+    align-items  : center;
+    gap          : 5px;
+    background   : var(--teal-light);
+    border       : 1px solid var(--teal-mid);
+    border-radius: var(--radius-full);
+    padding      : 3px 8px 3px 6px;
+    font-size    : 12px;
+    color        : var(--teal-dark);
+    font-weight  : 500;
+    max-width    : 200px;
+    overflow     : hidden;
+    white-space  : nowrap;
+    text-overflow: ellipsis;
+}
+
+.scc-pending-file__remove {
+    background   : none;
+    border       : none;
+    cursor       : pointer;
+    color        : var(--teal);
+    font-size    : 11px;
+    padding      : 0;
+    flex-shrink  : 0;
+}
+
+.scc-pending-file__remove:hover { color: var(--orange); }
+
+/* Footer row */
+.scc-compose__footer {
+    display      : flex;
+    align-items  : center;
+    justify-content: space-between;
+    margin-top   : 12px;
+}
+
+.scc-compose__hint {
+    font-size    : 12px;
+    color        : var(--grey-muted);
+}
+
+.scc-compose__hint kbd {
+    display      : inline-block;
+    padding      : 1px 5px;
+    background   : var(--grey-200);
+    border-radius: 4px;
+    font-family  : inherit;
+    font-size    : 10px;
+    font-weight  : 600;
+    color        : var(--ink-light);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.scc-btn {
+    display      : inline-flex;
+    align-items  : center;
+    gap          : 6px;
+    padding      : 8px 18px;
+    border       : none;
+    border-radius: var(--radius-full);
+    font-family  : inherit;
+    font-size    : 13px;
+    font-weight  : 700;
+    cursor       : pointer;
+    transition   : background var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+    white-space  : nowrap;
+}
+
+.scc-btn--primary {
+    background   : var(--teal);
+    color        : #fff;
+    box-shadow   : 0 1px 4px rgba(31,122,120,.30);
+}
+
+.scc-btn--primary:hover:not(.scc-btn--disabled) {
+    background   : var(--teal-dark);
+    box-shadow   : 0 2px 8px rgba(4,55,54,.30);
+    transform    : translateY(-1px);
+}
+
+.scc-btn--disabled {
+    background   : var(--grey-200);
+    color        : var(--grey-300);
+    cursor       : not-allowed;
+    box-shadow   : none;
+}
+
+/* ── Comment History ─────────────────────────────────────────────────────── */
+.scc-history {
+    background   : var(--bg-paper);
+    padding      : 0 0 16px;
+}
+
+.scc-history__header {
+    display      : flex;
+    align-items  : center;
+    gap          : 8px;
+    padding      : 16px 24px 12px;
+    border-bottom: 1px solid var(--grey-200);
+}
+
+.scc-history__label {
+    font-size    : 11px;
+    font-weight  : 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color        : var(--grey-muted);
+}
+
+.scc-history__count {
+    display      : inline-flex;
+    align-items  : center;
+    justify-content: center;
+    min-width    : 22px;
+    height       : 22px;
+    padding      : 0 6px;
+    background   : var(--teal);
+    color        : #fff;
+    border-radius: var(--radius-full);
+    font-size    : 11px;
+    font-weight  : 700;
+}
+
+.scc-history__sort {
+    margin-left  : auto;
+    background   : var(--bg-white);
+    border       : 1.5px solid var(--grey-200);
+    border-radius: var(--radius-full);
+    padding      : 4px 12px;
+    font-family  : inherit;
+    font-size    : 12px;
+    font-weight  : 600;
+    color        : var(--ink-light);
+    cursor       : pointer;
+    transition   : border-color var(--t-fast);
+}
+
+.scc-history__sort:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ── Thread ──────────────────────────────────────────────────────────────── */
+.scc-thread {
+    display      : flex;
+    flex-direction: column;
+    gap          : 0;
+    padding      : 8px 0 0;
+}
+
+/* ── Comment Card ────────────────────────────────────────────────────────── */
+.scc-comment {
+    display      : flex;
+    align-items  : flex-start;
+    gap          : 12px;
+    padding      : 16px 24px;
+    border-bottom: 1px solid var(--grey-200);
+    background   : var(--bg-white);
+    margin        : 0 16px 8px;
+    border-radius: var(--radius-md);
+    border-left  : 3px solid var(--teal-mid);
+    animation    : scc-slide-up var(--t-std) both;
+}
+
+.scc-comment:last-child { margin-bottom: 0; }
+
+/* Avatar */
+.scc-comment__avatar {
+    flex-shrink  : 0;
+    width        : 36px;
+    height       : 36px;
+    border-radius: 50%;
+    background   : var(--teal);
+    color        : #fff;
+    display      : flex;
+    align-items  : center;
+    justify-content: center;
+    font-size    : 12px;
+    font-weight  : 700;
+    letter-spacing: .03em;
+}
+
+.scc-comment__content { flex: 1; min-width: 0; }
+
+.scc-comment__meta {
+    display      : flex;
+    align-items  : center;
+    gap          : 6px;
+    margin-bottom: 6px;
+    flex-wrap    : wrap;
+}
+
+.scc-comment__author {
+    font-size    : 13px;
+    font-weight  : 700;
+    color        : var(--ink);
+}
+
+.scc-comment__dot { color: var(--grey-muted); font-size: 12px; }
+
+.scc-comment__time {
+    font-size    : 11px;
+    color        : var(--grey-muted);
+}
+
+.scc-comment__body {
+    margin       : 0;
+    font-size    : 14px;
+    line-height  : 1.55;
+    color        : var(--ink);
+    white-space  : pre-wrap;
+    word-break   : break-word;
+}
+
+/* ── Role Badges ─────────────────────────────────────────────────────────── */
+.scc-badge {
+    font-size    : 10px;
+    font-weight  : 600;
+    padding      : 2px 7px;
+    border-radius: var(--radius-full);
+}
+
+.scc-badge--customer {
+    background   : var(--teal-light);
+    color        : var(--teal-dark);
+    border       : 1px solid var(--teal-mid);
+}
+
+.scc-badge--agent {
+    background   : rgba(30,51,50,.08);
+    color        : var(--forest);
+    border       : 1px solid rgba(30,51,50,.15);
+}
+
+/* ── Attachments ─────────────────────────────────────────────────────────── */
+.scc-comment__attachments {
+    margin-top   : 10px;
+    padding-top  : 10px;
+    border-top   : 1px solid var(--grey-200);
+}
+
+.scc-attachments__label {
+    display      : flex;
+    align-items  : center;
+    gap          : 5px;
+    font-size    : 10px;
+    font-weight  : 700;
+    letter-spacing: .08em;
+    color        : var(--grey-muted);
+    margin-bottom: 8px;
+}
+
+.scc-attachment__pill {
+    display      : inline-flex;
+    align-items  : center;
+    gap          : 6px;
+    padding      : 5px 10px;
+    background   : var(--bg-paper);
+    border       : 1.5px solid var(--grey-200);
+    border-radius: var(--radius-sm);
+    font-size    : 12px;
+    color        : var(--ink);
+    text-decoration: none;
+    margin       : 0 6px 6px 0;
+    transition   : border-color var(--t-fast), background var(--t-fast);
+    max-width    : 260px;
+}
+
+.scc-attachment__pill:hover {
+    border-color : var(--teal);
+    background   : var(--teal-light);
+    color        : var(--teal-dark);
+}
+
+.scc-attachment__name {
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-overflow: ellipsis;
+    max-width    : 160px;
+}
+
+.scc-attachment__ext {
+    flex-shrink  : 0;
+    font-size    : 10px;
+    font-weight  : 700;
+    opacity      : .6;
+    text-transform: uppercase;
+}
+
+/* ── Char count ──────────────────────────────────────────────────────────── */
+.scc-char-count         { font-size: 11px; color: var(--grey-muted); }
+.scc-char-count--warn   { color: var(--gold); }
+.scc-char-count--danger { color: var(--orange); font-weight: 600; }
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.scc-empty {
+    padding      : 40px 24px;
+    text-align   : center;
+}
+
+.scc-empty__title {
+    margin       : 0 0 6px;
+    font-size    : 15px;
+    font-weight  : 700;
+    color        : var(--ink);
+}
+
+.scc-empty__sub {
+    margin       : 0;
+    font-size    : 13px;
+    color        : var(--grey-muted);
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
+@keyframes scc-slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scc-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .scc-header__inner { padding: 14px 16px; }
+    .scc-status        { display: none; }
+    .scc-compose       { padding: 16px; }
+    .scc-comment       { margin: 0 8px 8px; padding: 14px 16px; }
+}

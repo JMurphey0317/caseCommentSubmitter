@@ -1,0 +1,203 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-27-2026
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="scc-root">
+
+        <!-- ── HEADER ─────────────────────────────────────────────── -->
+        <div class="scc-header">
+            <div class="scc-header__accent"></div>
+            <div class="scc-header__inner">
+                <div class="scc-header__icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"
+                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="scc-header__text">
+                    <template if:true={caseInfo}>
+                        <span class="scc-header__case-num">Support Case #{caseInfo.caseNumber}</span>
+                        <h2 class="scc-header__title">{caseInfo.subject}</h2>
+                    </template>
+                    <template if:false={caseInfo}>
+                        <span class="scc-header__case-num">Support Case</span>
+                        <h2 class="scc-header__title">Case Comments</h2>
+                    </template>
+                </div>
+                <template if:true={caseInfo}>
+                    <div class={statusBadgeClass}>
+                        <span class="scc-status__dot"></span>
+                        {caseInfo.status}
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- ── LOADING ────────────────────────────────────────────── -->
+        <template if:true={isLoading}>
+            <div class="scc-loading">
+                <div class="scc-spinner"></div>
+                <p>Loading comments…</p>
+            </div>
+        </template>
+
+        <!-- ── ERROR ──────────────────────────────────────────────── -->
+        <template if:true={errorMessage}>
+            <div class="scc-error">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="12" cy="16" r="1" fill="currentColor"/>
+                </svg>
+                <span>{errorMessage}</span>
+                <button class="scc-error__dismiss" onclick={clearError}>✕</button>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+
+            <!-- ── COMPOSE ────────────────────────────────────────── -->
+            <div class="scc-compose">
+                <p class="scc-compose__label">Post a Comment</p>
+                <p class="scc-compose__sublabel">Your message will be visible to the support team.</p>
+
+                <textarea
+                    class="scc-compose__textarea"
+                    placeholder="Describe your issue or reply to the team…"
+                    value={newCommentBody}
+                    oninput={handleInput}
+                    onkeydown={handleKeyDown}
+                    maxlength="4000"
+                    rows="4"
+                    aria-label="New case comment"
+                    disabled={isSubmitting}
+                ></textarea>
+
+                <div class="scc-compose__char-row">
+                    <span class={charCountClass}>{charCount} / 4000</span>
+                </div>
+
+                <!-- Attachments -->
+                <div class="scc-compose__attach-section">
+                <lightning-file-upload
+                    label="Attachments"
+                    name="fileUploader"
+                    record-id={recordId}
+                    onuploadfinished={handleUploadFinished}
+                    multiple
+                    disabled={isSubmitting}
+                ></lightning-file-upload>
+                    <p class="scc-compose__upload-hint">Upload files, then click Post Comment</p>
+
+                    <template if:true={hasPendingFiles}>
+                        <div class="scc-pending-files">
+                            <template for:each={pendingFiles} for:item="pf">
+                                <span key={pf.documentId} class="scc-pending-file__pill">
+                                    <svg viewBox="0 0 16 16" fill="none" width="12" height="12">
+                                        <path d="M9 2H4C3.4 2 3 2.4 3 3V13C3 13.6 3.4 14 4 14H12C12.6 14 13 13.6 13 13V6L9 2Z"
+                                              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M9 2V6H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    {pf.name}
+                                    <button class="scc-pending-file__remove"
+                                            data-id={pf.documentId}
+                                            onclick={handleRemovePendingFile}>✕</button>
+                                </span>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Footer row -->
+                <div class="scc-compose__footer">
+                    <span class="scc-compose__hint">
+                        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to post
+                    </span>
+                    <button
+                        class={submitButtonClass}
+                        onclick={handleSubmit}
+                        disabled={submitDisabled}
+                    >
+                        <template if:false={isSubmitting}>
+                            <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
+                                <line x1="22" y1="2" x2="11" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </svg>
+                            Post Comment
+                        </template>
+                        <template if:true={isSubmitting}>Sending…</template>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── COMMENT HISTORY ────────────────────────────────── -->
+            <div class="scc-history">
+                <div class="scc-history__header">
+                    <span class="scc-history__label">Comment History</span>
+                    <span class="scc-history__count">{commentCount}</span>
+                    <button class="scc-history__sort" onclick={toggleSort}>
+                        {sortLabel}
+                    </button>
+                </div>
+
+                <template if:true={isEmpty}>
+                    <div class="scc-empty">
+                        <p class="scc-empty__title">No comments yet</p>
+                        <p class="scc-empty__sub">Be the first to leave a comment for your support agent.</p>
+                    </div>
+                </template>
+
+                <div class="scc-thread" aria-live="polite">
+                    <template for:each={sortedComments} for:item="comment">
+                        <div key={comment.id} class="scc-comment">
+                            <div class="scc-comment__avatar">
+                                <span>{comment.initials}</span>
+                            </div>
+                            <div class="scc-comment__content">
+                                <div class="scc-comment__meta">
+                                    <span class="scc-comment__author">{comment.authorName}</span>
+                                    <span class={comment.badgeClass}>{comment.roleBadge}</span>
+                                    <span class="scc-comment__dot">·</span>
+                                    <time class="scc-comment__time">{comment.formattedDate}</time>
+                                </div>
+                                <p class="scc-comment__body">{comment.body}</p>
+
+                                <template if:true={comment.hasFiles}>
+                                    <div class="scc-comment__attachments">
+                                        <div class="scc-attachments__label">
+                                            <svg viewBox="0 0 16 16" fill="none" width="12" height="12">
+                                                <path d="M13.5 8.5L7.5 14.5C6.1 15.9 3.9 15.9 2.5 14.5C1.1 13.1 1.1 10.9 2.5 9.5L9 3C9.9 2.1 11.4 2.1 12.3 3C13.2 3.9 13.2 5.4 12.3 6.3L6.3 12.3C5.8 12.8 5 12.8 4.5 12.3C4 11.8 4 11 4.5 10.5L10 5"
+                                                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            ATTACHMENTS
+                                        </div>
+                                        <template for:each={comment.files} for:item="file">
+                                            <a key={file.contentDocumentId}
+                                               href={file.downloadUrl}
+                                               class="scc-attachment__pill"
+                                               target="_blank"
+                                               rel="noopener noreferrer">
+                                                <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+                                                    <path d="M9 2H4C3.4 2 3 2.4 3 3V13C3 13.6 3.4 14 4 14H12C12.6 14 13 13.6 13 13V6L9 2Z"
+                                                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M9 2V6H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                                <span class="scc-attachment__name">{file.title}</span>
+                                                <span class="scc-attachment__ext">{file.fileExtension}</span>
+                                            </a>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+        </template>
+    </div>
+</template>
