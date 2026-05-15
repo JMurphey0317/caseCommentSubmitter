@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Comment Submitter Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__logo">CC</div>
+        <div>
+          <h1>Case Comment Submitter</h1>
+          <p>Interactive demo</p>
+        </div>
+      </div>
+
+      <section class="sidebar__section">
+        <h2>Demo controls</h2>
+        <label class="field">
+          <span>Viewer role</span>
+          <select id="viewerRole">
+            <option value="agent">Support Agent</option>
+            <option value="customer">Customer</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Case status</span>
+          <select id="caseStatus">
+            <option value="New">New</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Waiting on Customer" selected>Waiting on Customer</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </label>
+
+        <button id="resetDemo" class="btn btn--secondary">Reset demo data</button>
+      </section>
+
+      <section class="sidebar__section">
+        <h2>What this simulates</h2>
+        <ul>
+          <li>Case header and status badge</li>
+          <li>Published comment feed</li>
+          <li>Comment composer + validation</li>
+          <li>Attachment staging</li>
+          <li>Status transition logic</li>
+          <li>Success and error toasts</li>
+        </ul>
+      </section>
+    </aside>
+
+    <main class="demo-area">
+      <div id="toast" class="toast" aria-live="polite"></div>
+
+      <section class="card case-card">
+        <div class="case-card__header">
+          <div>
+            <div class="eyebrow" id="caseNumber">Support Case #00034125</div>
+            <h2 id="caseSubject">Login issue after password reset</h2>
+          </div>
+          <div id="statusBadge" class="status-badge status-badge--waiting">Waiting on Customer</div>
+        </div>
+
+        <div class="case-meta">
+          <div>
+            <span class="meta-label">Account</span>
+            <strong>Acme Industries</strong>
+          </div>
+          <div>
+            <span class="meta-label">Priority</span>
+            <strong>High</strong>
+          </div>
+          <div>
+            <span class="meta-label">Viewer</span>
+            <strong id="viewerLabel">Support Agent</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="card composer-card">
+        <div class="section-header">
+          <h3>Add comment</h3>
+          <span id="charCount" class="char-count">0 / 4000</span>
+        </div>
+
+        <textarea
+          id="commentInput"
+          class="comment-input"
+          rows="6"
+          placeholder="Type a case update, customer response, next step, or troubleshooting note..."
+        ></textarea>
+
+        <div class="toolbar">
+          <label class="upload-chip" for="attachmentInput">+ Add attachment</label>
+          <input id="attachmentInput" type="file" multiple hidden />
+          <button id="sortToggle" class="btn btn--ghost">↓ Newest first</button>
+        </div>
+
+        <div id="attachmentList" class="attachment-list"></div>
+
+        <div class="composer-actions">
+          <p class="helper-text" id="statusHint">Agent comments move the case to Waiting on Customer unless it is Closed or Resolved.</p>
+          <button id="submitButton" class="btn btn--primary" disabled>Submit comment</button>
+        </div>
+      </section>
+
+      <section class="card comments-card">
+        <div class="section-header">
+          <h3>Comment timeline</h3>
+          <span id="commentCount" class="comment-count">3 comments</span>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <p>No comments yet. Add the first update above.</p>
+        </div>
+
+        <div id="commentsList" class="comments-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
