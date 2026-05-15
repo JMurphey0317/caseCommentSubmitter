@@ -6,6 +6,28 @@ Submit Salesforce Case Comments through a simple UI and Apex-backed logic.
 
 **Case Comment Submitter** is a Salesforce customization (Apex + HTML/CSS/JavaScript) that helps users add comments to existing **Case** records quickly and consistently.
 
+## Interactive Demo
+
+A no-org-required interactive static demo is included in the repo.
+
+### Run locally
+
+Open `demo/index.html` in a browser.
+
+### What the demo shows
+
+- Case header with case number, subject, and status
+- Existing comment timeline
+- New comment composer with live character count
+- Sort toggle for newest/oldest comments
+- Simulated attachments
+- Simulated submit flow with toast feedback
+- Simulated case status changes based on comment author type
+
+### Optional GitHub Pages hosting
+
+Because the demo is static HTML/CSS/JS, it can also be hosted with GitHub Pages by serving the `demo/` directory or repository root.
+
 ## Key features
 
 - Submit a comment to a selected Case
@@ -61,8 +83,6 @@ If you don’t see it, contact your Salesforce admin to confirm you have access.
 ---
 
 ## Admin Guide (Setup)
-
-> The exact steps depend on whether this repo uses Aura/LWC/Visualforce and how it’s packaged. If you share the repo structure (or key files), I’ll rewrite this section to be exact.
 
 ### Prerequisites
 - Salesforce org with Cases enabled
