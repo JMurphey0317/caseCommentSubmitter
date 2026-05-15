@@ -8,25 +8,42 @@ Submit Salesforce Case Comments through a simple UI and Apex-backed logic.
 
 ## Interactive Demo
 
-A no-org-required interactive static demo is included in the repo.
+A finished **no-Salesforce-org-required interactive demo** is included in this repository.
+
+### Demo files
+
+- `demo/index.html`
+- `demo/styles.css`
+- `demo/app.js`
 
 ### Run locally
 
-Open `demo/index.html` in a browser.
+Open `demo/index.html` in any modern browser.
 
-### What the demo shows
+No build step, package install, Salesforce org, or local server is required.
+
+### What the demo includes
 
 - Case header with case number, subject, and status
-- Existing comment timeline
+- Existing comment timeline with seeded sample data
 - New comment composer with live character count
 - Sort toggle for newest/oldest comments
-- Simulated attachments
+- Simulated attachment staging
 - Simulated submit flow with toast feedback
-- Simulated case status changes based on comment author type
+- Viewer role switching between **Support Agent** and **Customer**
+- Simulated case status changes based on commenter type:
+  - **Agent comment** → `Waiting on Customer`
+  - **Customer comment** → `In Progress`
+  - **Closed** and **Resolved** cases remain unchanged
+- Reset button to restore the original demo dataset
+
+### Why this demo exists
+
+The actual repo is built for Salesforce, but this demo provides a browser-only experience so reviewers can understand the product behavior without deploying to an org.
 
 ### Optional GitHub Pages hosting
 
-Because the demo is static HTML/CSS/JS, it can also be hosted with GitHub Pages by serving the `demo/` directory or repository root.
+Because the demo is static HTML/CSS/JS, it can be hosted with GitHub Pages if you choose to publish the repo or expose the demo through a Pages-compatible entry point.
 
 ## Key features
 
@@ -40,6 +57,7 @@ Because the demo is static HTML/CSS/JS, it can also be hosted with GitHub Pages 
 - **End users / Support agents:** Add comments to customer Cases.
 - **Admins:** Deploy and grant access.
 - **Developers:** Extend the UI, validations, or submission behavior.
+- **Reviewers / stakeholders:** Explore behavior through the included static demo
 
 ---
 
@@ -115,15 +133,23 @@ Users typically need:
 - Add support for internal vs. customer-facing comments
 - Add error handling with more actionable messages
 - Add logging (platform events/custom object) for auditing submissions
+- Expand the static demo with additional flows or theme parity with the LWC
 
 ---
 
 ## Troubleshooting
 
+### Salesforce implementation
 - Verify the Apex class/controller is deployed and accessible.
 - Check Salesforce debug logs for exceptions during submit.
 - Confirm the running user has required object and field permissions.
 - Confirm the Case Id/context is being passed correctly to the UI.
+
+### Static demo
+- If the demo does not load, confirm `demo/index.html`, `demo/styles.css`, and `demo/app.js` are all present.
+- Open the demo in a modern desktop or mobile browser.
+- If styling is missing, verify `styles.css` is next to `index.html` in the `demo/` folder.
+- If interactivity is missing, verify `app.js` is next to `index.html` in the `demo/` folder.
 
 ---
 
